@@ -49,9 +49,7 @@ export default function AddIngredientModal({
     }
   }, [isOpen, initialName]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const handleSubmit = async () => {
     if (!name.trim()) {
       setError('재료 이름을 입력해주세요');
       return;
@@ -114,7 +112,7 @@ export default function AddIngredientModal({
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-4">
           {/* 재료 이름 */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -127,6 +125,11 @@ export default function AddIngredientModal({
               onChange={(e) => setName(e.target.value)}
               placeholder="예: 소금"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                }
+              }}
             />
           </div>
 
@@ -154,6 +157,11 @@ export default function AddIngredientModal({
                 placeholder="새 카테고리 입력"
                 className="mt-2 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 autoFocus
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                  }
+                }}
               />
             )}
           </div>
@@ -182,6 +190,11 @@ export default function AddIngredientModal({
                 placeholder="새 단위 입력 (예: g, ml, 개)"
                 className="mt-2 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 autoFocus
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                  }
+                }}
               />
             )}
           </div>
@@ -197,6 +210,14 @@ export default function AddIngredientModal({
               onChange={(e) => setPassword(e.target.value)}
               placeholder="비밀번호 입력"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  if (name.trim() && password) {
+                    handleSubmit();
+                  }
+                }
+              }}
             />
           </div>
 
@@ -211,14 +232,15 @@ export default function AddIngredientModal({
               취소
             </button>
             <button
-              type="submit"
+              type="button"
+              onClick={handleSubmit}
               disabled={adding || !name.trim() || !password}
               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed"
             >
               {adding ? '추가 중...' : '재료 추가'}
             </button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
