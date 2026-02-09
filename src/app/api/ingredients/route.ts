@@ -50,8 +50,9 @@ export async function POST(request: NextRequest) {
     }, { status: 201 });
   } catch (error) {
     console.error('Error creating ingredient:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to create ingredient';
     return NextResponse.json(
-      { success: false, error: 'Failed to create ingredient' },
+      { success: false, error: errorMessage },
       { status: 500 }
     );
   }

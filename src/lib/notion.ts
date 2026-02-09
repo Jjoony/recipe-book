@@ -293,20 +293,26 @@ export async function getIngredientById(id: string): Promise<Ingredient | null> 
 
 // Create new ingredient
 export async function createIngredient(data: Omit<Ingredient, 'id'>): Promise<Ingredient> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const properties: any = {
+    Name: {
+      title: [{ text: { content: data.name } }],
+    },
+  };
+
+  // Only add Category if it has a value
+  if (data.category) {
+    properties.Category = { select: { name: data.category } };
+  }
+
+  // Only add Unit if it has a value
+  if (data.unit) {
+    properties.Unit = { select: { name: data.unit } };
+  }
+
   const response = await notion.pages.create({
     parent: { database_id: INGREDIENTS_DB_ID },
-    properties: {
-      Name: {
-        title: [{ text: { content: data.name } }],
-      },
-      Category: {
-        select: data.category ? { name: data.category } : null,
-      },
-      Unit: {
-        select: data.unit ? { name: data.unit } : null,
-      },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } as any,
+    properties,
   });
 
   return transformToIngredient(response);
